@@ -1,0 +1,48 @@
+#!/usr/bin/python    
+
+## part 1
+'''
+print("Deal With LMA Testid Add")
+
+#open the files 
+RecFile = open("lma_add.rec","r")
+RegrFile = open("lma.regr","wr+")
+
+#Write the head lines for regression file 
+seq = ["-regshed\n","-errors 200\n","-retention p=d,f=k,u=k\n","\n"]
+RegrFile.writelines(seq)
+
+#Pick the testid lines in Rec File and Write to regression file
+for line in RecFile:
+	if '61' in line:
+		str = line[(line.index('6')):] 
+		RegrFile.seek(0,2)
+		RegrFile.write(str)
+
+RecFile.close()
+RegrFile.close()
+'''
+
+##part 2  Add regression times 
+#open the files 
+f1 = open("lma.regr","r+")
+f2 = open("lma_rand.regr","r")
+
+#Find the repeat times in f2 and assign them to f1 
+f1Lines = f1.readlines()
+for i,line in enumerate(f2):
+	if 'RAND' in line:
+		index = line.find('RAND')
+		if line[index+4] == ',':
+			count = 0
+			while (line[index+5+count] != ' '):
+				count = count +1 
+			str = line[index+4:index+5+count]
+			f1Lines[i] = f1Lines[i][:f1Lines[i].index('RAND')+4] + str + '  ' + f1Lines[i][f1Lines[i].index('//'):]
+			print str,i+1
+			print f1Lines[i]
+
+#Open a new file and Write to it
+f3 = open("lma_final.regr","w")
+for line in f1Lines:
+	f3.write(line)
